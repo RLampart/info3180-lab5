@@ -8,7 +8,8 @@ This file creates your application.
 from app import app, db
 from app.models import Movies
 from app.forms import MovieForm
-from flask import render_template, request, jsonify, send_file
+from flask import render_template, request, jsonify, send_file, send_from_directory
+from flask_wtf.csrf import generate_csrf
 from werkzeug.utils import secure_filename
 import os
 
@@ -21,12 +22,33 @@ import os
 def index():
     return jsonify(message="This is the beginning of our API")
 
+@app.route('/api/v1/csrf-token', methods=['GET'])
+def get_csrf():
+    return jsonify({'csrf_token': generate_csrf()}) 
+
+@app.route('/api/v1/posters/<filename>')
+def get_image(filename):
+    print(os.path.join(os.getcwd(),app.config['UPLOAD_FOLDER']), filename)
+    return send_from_directory(os.path.join(os.getcwd(),app.config['UPLOAD_FOLDER']), filename)
+
+@app.route('/api/v1/movies', methods=['GET'])
+def add_movies():
+    movies = db.session.execute(db.select(Movies)).scalars()
+    lst = []
+    for movie in movies:
+        entry = {}
+        entry['id'] = movie.id
+        entry['title'] = movie.title        
+        entry['poster'] = movie.poster
+        entry['description'] = movie.description
+        lst.append(entry)
+    return jsonify(lst)
+
 @app.route('/api/v1/movies', methods=['POST'])
 def movies():
     form = MovieForm()
     # Validate file upload on submit
-    if request.method == 'POST':
-       if form.validate_on_submit():
+    if form.validate_on_submit():
           title = form.title.data 
           description = form.description.data 
           poster = form.poster.data 
@@ -39,13 +61,13 @@ def movies():
           msg = {}
           msg['message'] = "Movie Successfully added"
           msg['title']  = title
-          msg['poster'] = poster
+          msg['poster'] = filename
           msg['description'] = description
           return jsonify(msg)
-       else:
+    else:
           msg = form_errors(form)
           return jsonify(msg)
-    return render_template('form.html', form = form)
+    
 
 ###
 # The functions below should be applicable to all Flask apps.
