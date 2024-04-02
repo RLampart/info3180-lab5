@@ -19,10 +19,9 @@ function fetchMovies(){
       let url =  response.url;
       movie.poster = url;
       console.log(movie.poster); 
+      movies.value.push(movie);
    });   
-      }
-      movies = data;
-      
+      }  
    })
 };
 onMounted(() => {
@@ -36,7 +35,7 @@ onMounted(() => {
     <li v-for="movie in movies" :key="movie.id" class=" col-md-10">
       <div class="card">
         <div class="card-img-top">
-        <img :src=movie.poster alt="MoviePoster"/>   
+            <img :src=movie.poster alt="MoviePoster"/>   
         </div>
         <div class="card-body">
             <h5 class="card-title">{{ movie.title }}</h5>
@@ -53,6 +52,8 @@ onMounted(() => {
 ul{
     display: grid;
     grid-template-columns: auto auto;
+    row-gap: 10px;
+    column-gap: 10px;
 }
 .card {
   flex-direction: row;
