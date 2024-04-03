@@ -31,7 +31,8 @@ onMounted(() => {
 </script>
 
 <template>
- <ul>
+  <div class="container">
+    <ul>
     <li v-for="movie in movies" :key="movie.id" class=" col-md-10">
       <div class="card">
         <div class="card-img-top">
@@ -46,6 +47,8 @@ onMounted(() => {
     </div>
     </li>
  </ul>
+  </div>
+ 
 </template>
 
 <style>
@@ -59,7 +62,7 @@ ul{
   flex-direction: row;
 }
 .card-img-top{
-  width: 60%;
+  width: 70%;
 }
 .card-img-top img {
   height: 250px;

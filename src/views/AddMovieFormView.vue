@@ -3,5 +3,8 @@ import MovieForm from '@/components/MovieForm.vue'
 </script>
 
 <template>
-    <MovieForm> </MovieForm>
+    <div class ="container">
+        <MovieForm> </MovieForm>
+    </div>
+    
 </template>

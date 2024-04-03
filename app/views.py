@@ -57,7 +57,6 @@ def movies():
           mov = Movies(title=title,description=description,poster=filename)
           db.session.add(mov)
           db.session.commit()
-          #flash('New Property Added', 'success')
           msg = {}
           msg['message'] = "Movie Successfully added"
           msg['title']  = title
